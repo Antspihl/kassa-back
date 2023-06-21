@@ -1,3 +1,4 @@
+"""Klass kassas toimuvate tehingute kirjutamiseks Google Sheetsi."""
 import pandas as pd
 import pygsheets
 

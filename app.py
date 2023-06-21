@@ -2,10 +2,13 @@
 from dataclasses import dataclass
 
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 
 from writer import add_order
 
 app = Flask(__name__)
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @dataclass
@@ -24,6 +27,7 @@ def front_page():
 
 
 @app.route("/order", methods=["POST"])
+@cross_origin()
 def order():
     """
     Read in an order and add to the Google sheet.
@@ -38,13 +42,23 @@ def order():
         return e
 
 
-@app.route("/data", methods=["GET"])
-def data():
+@app.route("/drinks", methods=["GET"])
+@cross_origin()
+def get_drinks():
     """
-    Read data from a Google sheet and return it as a json.
+    Read data drinks data from a Google sheet and return it as a json.
     :return:
     """
-    #  Todo: read data from a Google sheet and return it as a json
+    #  TODO: read data from a Google sheet and return it as a json
+
+@app.route("/customers", methods=["GET"])
+@cross_origin()
+def get_customers():
+    """
+    Read data customers data from a Google sheet and return it as a json.
+    :return:
+    """
+    # TODO: read data from a Google sheet and return it as a json
 
 
 if __name__ == "__main__":
