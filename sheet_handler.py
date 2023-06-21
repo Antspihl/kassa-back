@@ -49,8 +49,6 @@ def add_order(customer_name: str, drink_name: str, quantity: int):
     """
     Add a drink to a customer's order. If the customer already has an order, add to the existing order.
     """
-    if quantity < 0 or customer_name == "" or drink_name == "":
-        return
     has_record = False
     sh = gc.open("Soveldaja kassa")
     wks = sh[0]  # table name: main
