@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
-from writer import add_order
+from sheet_handler import add_order, get_drinks, get_names
 
 app = Flask(__name__)
 CORS(app)
@@ -23,7 +23,7 @@ def front_page():
     """
     Front page of the app.
     """
-    return "Hello, I am working!"
+    return "Tsauki-tsau, ma töötan"
 
 
 @app.route("/order", methods=["POST"])
@@ -44,21 +44,28 @@ def order():
 
 @app.route("/drinks", methods=["GET"])
 @cross_origin()
-def get_drinks():
+def drinks():
     """
-    Read data drinks data from a Google sheet and return it as a json.
-    :return:
+    Read drinks data from a Google sheet and return it as a json.
     """
-    #  TODO: read data from a Google sheet and return it as a json
+    try:
+        return get_drinks()
+    except Exception as e:
+        print(e)
+        return e
 
-@app.route("/customers", methods=["GET"])
+
+@app.route("/names", methods=["GET"])
 @cross_origin()
-def get_customers():
+def names():
     """
-    Read data customers data from a Google sheet and return it as a json.
-    :return:
+    Read name data from a Google sheet and return it as a json.
     """
-    # TODO: read data from a Google sheet and return it as a json
+    try:
+        return get_names()
+    except Exception as e:
+        print(e)
+        return e
 
 
 if __name__ == "__main__":
