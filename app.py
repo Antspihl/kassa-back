@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from flask import Flask, request
 
-from writer import create_transactions, add_to_customer
+from writer import add_order
 
 app = Flask(__name__)
 
@@ -15,6 +15,14 @@ class Order:
     quantity: int
 
 
+@app.route("/")
+def front_page():
+    """
+    Front page of the app.
+    """
+    return "Hello, I am working!"
+
+
 @app.route("/order", methods=["POST"])
 def order():
     """
@@ -22,8 +30,8 @@ def order():
     """
     try:
         data = Order(request.json["customer_name"], request.json["drink_name"], request.json["quantity"])
-        add_to_customer(data.customer_name, data.drink_name, data.quantity)
-
+        add_order(data.customer_name, data.drink_name, data.quantity)
+        print(f"Order from request: {data}")
         return "ok"
     except Exception as e:
         print(e)
