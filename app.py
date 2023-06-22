@@ -43,7 +43,7 @@ def order():
 
 
 @app.route("/drinks", methods=["GET"])
-@cross_origin()
+@cross_origin(send_wildcard=True)
 def drinks():
     """
     Read drinks data from a Google sheet and return it as a json.
@@ -56,7 +56,7 @@ def drinks():
 
 
 @app.route("/names", methods=["GET"])
-@cross_origin()
+@cross_origin(send_wildcard=True)
 def names():
     """
     Read name data from a Google sheet and return it as a json.
