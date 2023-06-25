@@ -23,6 +23,7 @@ def front_page():
     """
     Front page of the app.
     """
+    print(get_drinks())
     return "Tsauki-tsau, ma töötan"
 
 

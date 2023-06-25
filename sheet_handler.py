@@ -69,14 +69,14 @@ def add_order(customer_name: str, drink_name: str, quantity: int):
     wks.set_dataframe(pd.DataFrame(existing_data), start="A1")
 
 
-def get_drinks() -> dict:
+def get_drinks() -> list:
     """
     Get all drinks from the Google sheet.
     """
     sh = gc.open("Soveldaja kassa")
     wks = sh[2]  # table name: "Joogid"
     existing_data = wks.get_all_records()
-    return parse_drink_data(existing_data).pop("drink_name")
+    return parse_drink_data(existing_data)
 
 
 def get_drinks_and_prices() -> dict:
@@ -120,16 +120,15 @@ def parse_order_data(data: list) -> list:
     return parsed_data
 
 
-def parse_drink_data(data: list) -> dict:
+def parse_drink_data(data: list) -> list:
     """
     Parse data from Google Sheets to a dict.
     """
-    parsed_data = {"drink_name": [], "price": []}
+    parsed_data = []
     for item in data:
-        parsed_data["drink_name"].append(item["drink_name"])
-        parsed_data["price"].append(item["price"])
+        parsed_data.append(item["drink_name"])
     # Replace non-ascii characters
-    parsed_data["drink_name"] = [unicodedata.normalize('NFKD', i).encode('ascii', 'ignore').decode('utf-8') for i in parsed_data["drink_name"]]
+    parsed_data = [unicodedata.normalize('NFKD', i).encode('ascii', 'ignore').decode('utf-8') for i in parsed_data]
     return parsed_data
 
 
