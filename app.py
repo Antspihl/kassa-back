@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
+from bill_handler import BillHandler
 from sheet_handler import add_order, get_drinks, get_names
 
 app = Flask(__name__)
@@ -23,7 +24,6 @@ def front_page():
     """
     Front page of the app.
     """
-    print(get_drinks())
     return "Tsauki-tsau, ma töötan"
 
 
@@ -64,6 +64,20 @@ def names():
     """
     try:
         return get_names()
+    except Exception as e:
+        print(e)
+        return e
+
+
+@app.route("/bills", methods=["GET"])
+@cross_origin(send_wildcard=True)
+def bills():
+    """
+    Read name data from a Google sheet and return it as a json.
+    """
+    bill_handler = BillHandler()
+    try:
+        return bill_handler.get_bill_list()
     except Exception as e:
         print(e)
         return e

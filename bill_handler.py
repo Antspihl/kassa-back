@@ -11,7 +11,7 @@ class BillHandler:
         self.names = get_names()  # ["name1", "name2"]
         self.orders = get_final_order_list()  # [("name", "drink", quantity)]
 
-        self.people = self.create_people()
+        self.people = self.create_people()  # {"name": Person}
         self.assign_bills()
 
     def get_bill(self, name: str) -> int:
@@ -35,7 +35,7 @@ class BillHandler:
         """
         people = {}
         for name in self.names:
-            people[name] = Person(name, [self.drinks.keys()])
+            people[name] = Person(name, list(self.drinks.keys()))
         return people
 
     def get_summary(self) -> str:
@@ -47,6 +47,15 @@ class BillHandler:
         for person in people:
             summary += f"{person.name}: {person.bill}€\n"
         return summary[:-1]
+
+    def get_bill_list(self) -> list:
+        """
+        Get a list of bills.
+        """
+        bill_list = []
+        for person in self.people.values():
+            bill_list.append((person.name, person.bill))
+        return [person for person in bill_list if person[1] > 0]
 
 
 class Person:
