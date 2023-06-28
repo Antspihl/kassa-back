@@ -54,13 +54,10 @@ def add_order(customer_name: str, drink_name: str, quantity: int):
     wks = sh[0]  # table name: main
 
     existing_data = wks.get_all_records()
-    print(f"Existing data: {existing_data}")
 
     for row in existing_data:
         if row["customer_name"] == customer_name and row["drink_name"] == drink_name:
             has_record = True
-            if pd.isna(row["quantity"]):
-                row["quantity"] = 0
             row["quantity"] += quantity
             break
 
@@ -96,7 +93,6 @@ def get_names() -> list[str]:
     sh = gc.open("Soveldaja kassa")
     wks = sh[3]  # table name: "Nimed"
     existing_data = wks.get_all_records()
-    print(f"Existing data: {existing_data}")
     return parse_name_data(existing_data).pop("names")
 
 

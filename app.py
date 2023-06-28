@@ -8,12 +8,15 @@ from bill_handler import BillHandler
 from sheet_handler import add_order, get_drinks, get_names
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @dataclass
 class Order:
+    """
+    Dataclass for an order.
+    """
     customer_name: str
     drink_name: str
     quantity: int
@@ -28,7 +31,7 @@ def front_page():
 
 
 @app.route("/order", methods=["POST"])
-@cross_origin()
+@cross_origin(send_wildcard=True, origins='*')
 def order():
     """
     Read in an order and add to the Google sheet.
@@ -39,7 +42,7 @@ def order():
         print(f"Order from request: {data}")
         return "ok"
     except Exception as e:
-        print(e)
+        print("==", e)
         return e
 
 
