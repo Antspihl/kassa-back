@@ -86,5 +86,19 @@ def bills():
         return e
 
 
+@app.route("/billDetails", methods=["GET"])
+@cross_origin(send_wildcard=True)
+def bill_details():
+    """
+    Read name data from a Google sheet and return it as a json.
+    """
+    bill_handler = BillHandler()
+    try:
+        return bill_handler.get_bill_details()
+    except Exception as e:
+        print(e)
+        return e
+
+
 if __name__ == "__main__":
     app.run(debug=True)

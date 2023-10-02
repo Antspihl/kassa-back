@@ -9,7 +9,7 @@ class BillHandler:
     def __init__(self):
         self.drinks = get_drinks_and_prices()  # {"drink_name": price}
         self.names = get_names()  # ["name1", "name2"]
-        self.orders = get_final_order_list()  # [("name", "drink", quantity)]
+        self.all_orders = get_final_order_list()  # [("name", "drink", quantity)]
 
         self.people = self.create_people()  # {"name": Person}
         self.assign_bills()
@@ -24,9 +24,9 @@ class BillHandler:
         """
         Go through orders and assign final bills to people.
         """
-        for order in self.orders:
+        for order in self.all_orders:
             name, drink, quantity = order
-            self.people[name].drinks[drink] += quantity
+            self.people[name].drinks_with_quantity[drink] += quantity
             self.people[name].bill += float(self.drinks[drink] * quantity)
 
     def create_people(self) -> dict:
@@ -57,6 +57,21 @@ class BillHandler:
             bill_list.append((person.name, person.bill))
         return [person for person in bill_list if person[1] > 0]
 
+    def get_bill_details(self) -> list:
+        """
+        Get a list of people with their drinks.
+        {"name": "name", "drinks": {"drink": quantity}}
+        """
+        bill_details = []
+        for person in self.people.values():
+            if person.bill > 0:
+                drinks = {}
+                for drink, quantity in person.drinks_with_quantity.items():
+                    if quantity > 0:
+                        drinks[drink] = quantity
+                bill_details.append({person.name: drinks})
+        return bill_details
+
 
 class Person:
     """
@@ -64,9 +79,7 @@ class Person:
     """
     def __init__(self, name: str, drinks: list):
         self.name = name
-        self.drinks = dict()
+        self.drinks_with_quantity = dict()  # {"drink": quantity}
         for drink in drinks:
-            self.drinks[drink] = 0
+            self.drinks_with_quantity[drink] = 0
         self.bill = float(0)
-
-
