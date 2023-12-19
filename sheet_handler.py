@@ -1,16 +1,13 @@
 """Klass kassas toimuvate tehingute kirjutamiseks Google Sheetsi."""
+from typing import Any
+
 import pandas as pd
 import pygsheets
 import unicodedata
+from pandas import DataFrame
 
 # authorization API key
 gc = pygsheets.authorize(service_file="sheets_api.json")
-
-df = pd.DataFrame()
-df["timestamp"] = []
-df["customer_name"] = []
-df["drink_name"] = []
-df["quantity"] = []
 
 
 def log_transactions(customer_name: str, drink_name: str, quantity: int, has_record: bool):
@@ -96,6 +93,17 @@ def get_names() -> list[str]:
     return parse_name_data(existing_data).pop("names")
 
 
+def get_names_and_emails() -> list[tuple[Any, Any]]:
+    """
+    Get all customers from the Google sheet.
+    :return [("name", "email"), ("name1", "email1")]
+    """
+    sh = gc.open("Soveldaja kassa")
+    wks = sh[3]  # table name: "Nimed"
+    existing_data = wks.get_all_records()
+    return [(item["name"], item["email"]) for item in existing_data]
+
+
 def get_final_order_list() -> list:
     """
     Get all orders from the Google sheet.
@@ -151,3 +159,23 @@ def parse_drink_and_price_data(data: list) -> dict:
     # Replace non-ascii characters
     parsed_data = {unicodedata.normalize('NFKD', k).encode('ascii', 'ignore').decode('utf-8'): v for k, v in parsed_data.items()}
     return parsed_data
+
+
+def get_all_logs() -> DataFrame:
+    """
+    Get all logs from the Google sheet.
+    """
+    sh = gc.open("Soveldaja kassa")
+    wks = sh[1]  # table name: "Tellimuste logi"
+    existing_data = wks.get_all_records()
+    return pd.DataFrame(existing_data)
+
+
+def get_all_logs_filtered() -> DataFrame:
+    """
+    Get all logs from the Google sheet.
+    """
+    sh = gc.open("Soveldaja kassa")
+    wks = sh[0]  # table name: "Tellimuste kokkuvõte"
+    existing_data = wks.get_all_records()
+    return pd.DataFrame(existing_data)

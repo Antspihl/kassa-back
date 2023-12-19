@@ -56,7 +56,11 @@ class BillHandler:
         bill_list = []
         for person in self.people.values():
             if person.bill > 0:
-                a = {"name": person.name, "bill": f"{person.bill}€"}
+                drinks = {}
+                for drink, quantity in person.drinks_with_quantity.items():
+                    if quantity > 0:
+                        drinks[drink] = quantity
+                a = {"name": person.name, "bill": f"{person.bill}€", "drinks": drinks}
                 bill_list.append(a)
         return bill_list
 
@@ -74,21 +78,6 @@ class BillHandler:
                         drinks[drink] = quantity
                 bill_details.append({person.name: drinks})
         return bill_details
-
-    def get_person_details_by_name(self, name: str) -> dict:
-        """Enter a person's name and get their info as dict
-        {
-            "name": "name",
-            "drinks": {"drink": quantity}
-            "bill": float
-        }
-        """
-        person = self.people[name]
-        drinks = {}
-        for drink, quantity in person.drinks_with_quantity.items():
-            if quantity > 0:
-                drinks[drink] = quantity
-        return {"name": person.name, "drinks": drinks, "bill": person.bill}
 
     def get_people(self) -> dict:
         """Get a list of people."""
