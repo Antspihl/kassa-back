@@ -5,7 +5,7 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 from bill_handler import BillHandler
-from sheet_handler import add_order, get_drinks, get_names
+from sheet_handler import add_order, get_drinks, get_names, get_names_and_emails
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -95,6 +95,34 @@ def bill_details():
     bill_handler = BillHandler()
     try:
         return bill_handler.get_bill_details()
+    except Exception as e:
+        print(e)
+        return e
+
+
+@app.route("/emails", methods=["GET"])
+@cross_origin(send_wildcard=True)
+def names_and_emails():
+    """
+    Read name data from a Google sheet and return it as a json.
+    """
+    try:
+        return get_names_and_emails()
+    except Exception as e:
+        print(e)
+        return e
+
+
+@app.route("/bill", methods=["GET"])
+@cross_origin(send_wildcard=True)
+def person_details_by_name():
+    """
+    Read name data from a Google sheet and return it as a json.
+    """
+    bill_handler = BillHandler()
+    param_value = request.args.get('name').replace("_", " ")
+    try:
+        return bill_handler.get_person_details_by_name(param_value)
     except Exception as e:
         print(e)
         return e

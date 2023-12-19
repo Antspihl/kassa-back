@@ -1,3 +1,3 @@
 # kassa-back
-Soveldaja kassa backend
-Use "python -m pyinstaller app.py [PATH]" to make a new version into a .exe file
+ - Soveldaja kassa backend
+ - ``python -m pyinstaller app.py [PATH]``makes a new version into a .exe file
