@@ -60,7 +60,7 @@ class BillHandler:
                 for drink, quantity in person.drinks_with_quantity.items():
                     if quantity > 0:
                         drinks[drink] = quantity
-                a = {"name": person.name, "bill": f"{person.bill}€", "drinks": drinks}
+                a = {"name": person.name, "bill": f"{int(person.bill)}", "drinks": drinks}
                 bill_list.append(a)
         return bill_list
 
