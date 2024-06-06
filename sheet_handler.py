@@ -179,3 +179,25 @@ def get_all_logs_filtered() -> DataFrame:
     wks = sh[0]  # table name: "Tellimuste kokkuvõte"
     existing_data = wks.get_all_records()
     return pd.DataFrame(existing_data)
+
+
+def get_last_20_orders() -> list:
+    """
+    Get the last 20 orders from the logs that are with a positive drink amount.
+    """
+    sh = gc.open("Soveldaja kassa")
+    wks = sh[1]  # table name: "Tellimuste logi"
+    existing_data = wks.get_all_records()[::-1]
+    last_20_orders = []
+    for index, item in enumerate(existing_data):
+        if item["quantity"] > 0:
+            for i in range(index):
+                if (existing_data[i]["quantity"] == -item["quantity"] and
+                        existing_data[i]["customer_name"] == item["customer_name"] and
+                        existing_data[i]["drink_name"] == item["drink_name"]):
+                    break
+            else:
+                last_20_orders.append(item)
+        if len(last_20_orders) == 20:
+            break
+    return last_20_orders[::-1]

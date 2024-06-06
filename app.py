@@ -5,7 +5,7 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 from bill_handler import BillHandler
-from sheet_handler import add_order, get_drinks, get_names, get_names_and_emails
+from sheet_handler import add_order, get_drinks, get_names, get_names_and_emails, get_last_20_orders
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -41,6 +41,19 @@ def order():
         add_order(data.customer_name, data.drink_name, data.quantity)
         print(f"Order from request: {data}")
         return "ok"
+    except Exception as e:
+        print("==", e)
+        return e
+
+
+@app.route("/orders", methods=["GET"])
+@cross_origin(send_wildcard=True)
+def get_last_orders():
+    """
+    Return 20 last orders that were sent from the app.
+    """
+    try:
+        return get_last_20_orders()
     except Exception as e:
         print("==", e)
         return e
@@ -114,4 +127,4 @@ def names_and_emails():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
