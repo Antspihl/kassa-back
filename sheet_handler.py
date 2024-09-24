@@ -5,28 +5,9 @@ from pandas import DataFrame
 import pandas as pd
 import pygsheets
 import unicodedata
-import re
 
 # authorization API key
 gc = pygsheets.authorize(service_file="sheets_api.json")
-
-unicode_replacements = {
-    r'\u00f5': 'õ',
-    r'\u00fc': 'ü',
-    r'\u00f6': 'ö',
-    r'\u00e4': 'ä',
-    r'\u0161': 'š',
-    r'\u017e': 'ž'
-}
-
-
-def replace_unicode_characters(name: str) -> str:
-    """
-    Replace Unicode escape sequences with actual characters like 'ä', 'õ', etc.
-    """
-    for unicode_seq, char in unicode_replacements.items():
-        name = re.sub(unicode_seq, char, name)
-    return name
 
 
 def log_transactions(customer_name: str, drink_name: str, quantity: int, has_record: bool):
@@ -150,8 +131,7 @@ def parse_drink_data(data: list) -> list:
     """
     parsed_data = []
     for item in data:
-        drink = replace_unicode_characters(item["drink_name"])
-        parsed_data.append(drink)
+        parsed_data.append(item["drink_name"])
     return parsed_data
 
 
@@ -160,11 +140,8 @@ def parse_name_data(data: list) -> dict:
     Parse data from Google Sheets to a dict
     """
     parsed_data = {"names": []}
-
     for item in data:
-        name = replace_unicode_characters(item["name"])
-        parsed_data["names"].append(name)
-
+        parsed_data["names"].append(item["name"])
     return parsed_data
 
 
